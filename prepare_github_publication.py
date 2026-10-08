@@ -1,6 +1,7 @@
 """Package public research code by function, preserving executable paths."""
 from pathlib import Path
 import json
+import re
 from zipfile import ZipFile, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parent
@@ -106,7 +107,8 @@ MANUSCRIPT = ['revise_manuscript.py', 'integrate_manuscript.py',
     'review_manuscript_text.py', 'followup_manuscript_text.py',
     'final_small_revision.py', 'compile_paper.ps1', 'render_final_pdfs.py',
     'manuscript/main.tex', 'manuscript/main.pdf', 'manuscript/references.bib',
-    'build/handover_originals/manuscript/main.tex']
+    'build/handover_originals/manuscript/main.tex',
+    'submission/latex_source/elsarticle.cls']
 
 def collect():
     files = {ROOT / n for n in EXPERIMENTS + ANALYSIS + FIGURES + MANUSCRIPT}
@@ -126,7 +128,9 @@ def collect():
         files.add(p)
         if p.with_suffix('.csv').exists():
             files.add(p.with_suffix('.csv'))
-    files.update((ROOT / 'manuscript/figures').glob('*.pdf'))
+    article = (ROOT / 'manuscript/main.tex').read_text(encoding='utf-8')
+    files.update(ROOT / 'manuscript/figures' / (name + '.pdf')
+                 for name in set(re.findall(r'\\fig\{([^}]+)\}', article)))
     selected = []
     for p in sorted(files):
         n = p.relative_to(ROOT).as_posix()
@@ -173,5 +177,11 @@ if __name__ == '__main__':
         if p.parent == ROOT and p.suffix in ['.py', '.ps1', '.txt']:
             (DEST / p.name).write_bytes(p.read_bytes())
     (DEST / 'smpt-manuscript-classified-20261008.pdf').write_bytes((ROOT / 'manuscript/main.pdf').read_bytes())
-    (DEST / 'smpt-latex-classified-20261008.zip').write_bytes((ROOT / 'submission/SMPT_LaTeX_source_20261007.zip').read_bytes())
+    article = (ROOT / 'manuscript/main.tex').read_text(encoding='utf-8')
+    with ZipFile(DEST / 'smpt-latex-classified-20261008.zip', 'w', ZIP_DEFLATED) as out:
+        out.writestr('smpt_manuscript.tex', article.replace('figures/#1.pdf', '#1.pdf'))
+        out.write(ROOT / 'manuscript/references.bib', 'references.bib')
+        out.write(ROOT / 'submission/latex_source/elsarticle.cls', 'elsarticle.cls')
+        for name in sorted(set(re.findall(r'\\fig\{([^}]+)\}', article))):
+            out.write(ROOT / 'manuscript/figures' / (name + '.pdf'), name + '.pdf')
     print('Public packages:', DEST)
