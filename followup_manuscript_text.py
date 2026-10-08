@@ -86,14 +86,14 @@ Four parameter combinations are examined. Fit1 and Fit2 are the two original pro
     change=(fine[1]['time_s']-fine[0]['time_s'])-(coarse[1]['time_s']-coarse[0]['time_s'])
     prop+=r'For the Joint vector, reducing the step to 0.0125 s gives A1/A5 startup at '+number(fine[0]['time_s'],4)+'/'+number(fine[1]['time_s'],4)+r' s and a paired difference of '+number(fine[1]['time_s']-fine[0]['time_s'],5)+r' s. The paired change from 0.025 s is '+number(change,6)+r' s ('+number(50*change,4)+r' J at 50 W); the allocation ordering is retained.'+'\n'
     doc=doc[:a]+prop+'\n'+doc[b:]
-    # State precisely which contest inputs are retained and which work is added.
+    # State precisely which supplied inputs are retained and which work is added.
     needle=r'Table~\ref{tab:related} positions'
-    paragraph=r'''The supplied contest input files provide single-cell current/voltage/temperature records, geometry, material properties and initial-state settings. This study retains those observations and physical inputs. Its added comparisons isolate equal-power spatial allocation, matched-window feedback, finite reaction-resource accounting and continuation from the actual startup state; joint fitting and numerical refinements characterize parameter and discretization dependence. The study's scientific increment is these coupled comparisons, rather than a change to the original observations.
+    paragraph=r'''The supplied input files provide single-cell current/voltage/temperature records, geometry, material properties and initial-state settings. This study retains those observations and physical inputs. Its added comparisons isolate equal-power spatial allocation, matched-window feedback, finite reaction-resource accounting and continuation from the actual startup state; joint fitting and numerical refinements characterize parameter and discretization dependence. The study's scientific increment is these coupled comparisons, rather than a change to the original observations.
 
 '''
     doc=doc.replace(needle,paragraph+needle,1)
     doc=doc.replace('A public repository address and sharing terms are to be supplied by the authors.',
-        'The implementation, exact configurations, simulation trajectories and figure scripts are organized in a local reproducibility package for author review. No public deposit or repository DOI has been assigned to that package. The contest observations remain attributed to their original source; the local package does not establish redistribution permission for those observations.')
+        'The implementation, exact configurations, fitted parameter vectors, simulation trajectories and figure scripts are available at https://github.com/ludkeharshfield197-sys/pemfc-cold-start-smpt. The public package excludes the original observation records; repeating single-cell fitting requires those records. No repository DOI or additional reuse license has been assigned.')
     doc=doc.replace('Time/grid refinement, end $\\beta=1$--10 and separate 20\\% memory variations preserve the allocation advantage.',
         r'Time/grid refinement, end $\beta=1$--10 and separate 20\% memory variations preserve the nominal allocation advantage. Joint training fits converge from three initial vectors but worsen the colder validation response; the supplied vector remains the nominal setting, and four selected coefficient combinations are carried through fresh startup and holding.')
     doc=doc.replace('Matched-window feedback adds a small increment,',

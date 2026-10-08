@@ -305,7 +305,7 @@ The first startup crossing leaves substantial endplate cooling demand. Every tes
  ending=original[original.index(r'\section*{Data and code availability}'):]
  dstart=ending.index(r'\section*{Data and code availability}'); dend=ending.index(r'\section*{Funding}')
  ending=ending[:dstart]+r"""\section*{Data and code availability}
-The research files contain the model implementation, supplied observation workbooks, calibrated parameters, exact startup and holding configurations, accepted endpoint states, simulation trajectories and reusable figure-generation scripts. All scientific methods, parameters and comparisons are reported in this article. Single-cell observations originate from the 2026 China Postgraduate Mathematical Contest in Modeling, problem B. A public repository address and sharing terms are to be supplied by the authors.
+The research files contain the model implementation, supplied observation workbooks, calibrated parameters, exact startup and holding configurations, accepted endpoint states, simulation trajectories and reusable figure-generation scripts. All scientific methods, parameters and comparisons are reported in this article. A public repository address and sharing terms are to be supplied by the authors.
 
 """+ending[dend:]
  ending=re.sub(r'\\bibitem\{alfalouji\}.*?(?=\\end\{thebibliography\})',lambda m:r'\bibitem{haddad} Ahmad Haddad, Marc Mannah, Hasan Bazzi. Nonlinear time-variant model of the PEM type fuel cell for automotive applications. Simul. Model. Pract. Theory 51 (2015) 31--44. \url{https://doi.org/10.1016/j.simpat.2014.11.002}.'+'\n',ending,flags=re.S)
